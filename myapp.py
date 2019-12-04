@@ -1,14 +1,18 @@
 from flask import Flask, render_template, request, abort, json
-from pymongo import MongoClient
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
+from pymongo import MongoClient
 
-USER_KEYS = ['name', 'last_name', 'occupation', 'follows', 'age']
 
-# El cliente se levanta en la URL de la wiki
-URL = "mongodb://grupo90:grupo90@gray.ing.puc.cl/grupo90"
-client = MongoClient(URL)
+uri = "mongodb://grupo64:grupo64@gray.ing.puc.cl/grupo64"
+# La uri 'estándar' es "mongodb://user:password@ip/database"
+client = MongoClient(uri)
+db = client.get_database()
+qfilter = db.mensaje.find()
+
+for i in qfilter:
+    print(i)
 
 # Iniciamos la aplicación de flask
 app = Flask(__name__)
