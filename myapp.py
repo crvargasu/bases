@@ -9,21 +9,40 @@ uri = "mongodb://grupo64:grupo64@gray.ing.puc.cl/grupo64"
 # La uri 'estándar' es "mongodb://user:password@ip/database"
 client = MongoClient(uri)
 db = client.get_database()
+
+
+"""
 qfilter = db.mensaje.find()
 
+
 for i in qfilter:
-    print(i)
+    print(i.id)
+"""
+
+filt = db.mensaje.find({"id": 2})
+
+for i in filt:
+    print(i["mensaje"])
+
+
+
+
 
 # Iniciamos la aplicación de flask
 app = Flask(__name__)
 
 
-#INCOMPLETO
+#COMPLETO
 @app.route("/messages/id", methods=["GET"])
 def id():
     #SE RESCATA EL PARAMETRO
     id = request.args.get("id", default = 1, type = int)
-    return f"<h1>{id}</h1>"
+    filt = db.mensaje.find({"id": id})
+    for i in filt:
+        msj = i["mensaje"]
+        data = i["metadata"]
+    respuesta = f"Mensaje: {msj}, Data: {data}"
+    return f"<h1>{respuesta}</h1>"
 
 #INCOMPLETO
 @app.route("/messages/project-search", methods=["GET"])
@@ -43,3 +62,4 @@ def content_search():
 
 if __name__ == "__main__":
     app.run()
+
