@@ -17,14 +17,27 @@ qfilter = db.mensaje.find()
 
 for i in qfilter:
     print(i.id)
+
 """
+"""
+filt = db.mensaje.find()
 
-filt = db.mensaje.find({"id": 2})
-
+mensajes = []
+nom = "Proyecto_Agua"
+resp = ""
+n = 1
 for i in filt:
-    print(i["mensaje"])
+    #print(i)
+    if i["metadata"]["sender"] == nom:
+        mensajes.append(i["mensaje"])
+    if i["metadata"]["receiver"] == nom:
+        mensajes.append(i["mensaje"])
+for i in mensajes:
+    resp += f"{n}: {i} "
+    n += 1
+print(resp)
 
-
+"""
 
 
 
@@ -44,12 +57,26 @@ def id():
     respuesta = f"Mensaje: {msj}, Data: {data}"
     return f"<h1>{respuesta}</h1>"
 
-#INCOMPLETO
+#COMPLETO
 @app.route("/messages/project-search", methods=["GET"])
 def project_search():
     # SE RESCATA EL PARAMETRO
-    proyecto = request.args.get("proyecto", default = " ", type = str)
-    return f"<h1>{proyecto}</h1>"
+    nom = request.args.get("proyecto", default = "", type = str)
+    mensajes = []
+    resp = ""
+    n = 1
+    filt = db.mensaje.find()
+    for i in filt:
+        print(nom)
+        if i["metadata"]["sender"] == nom:
+            mensajes.append(i["mensaje"])
+        if i["metadata"]["receiver"] == nom:
+            mensajes.append(i["mensaje"])
+    for i in mensajes:
+        resp += f"Mensajes => {n}: {i} "
+        n += 1
+
+    return f"<h1>{resp}</h1>"
 
 
 #INCOMPLETO
