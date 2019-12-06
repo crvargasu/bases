@@ -45,38 +45,30 @@ print(resp)
 app = Flask(__name__)
 
 
-#COMPLETO
-@app.route("/messages/id", methods=["GET"])
-def id():
-    #SE RESCATA EL PARAMETRO
-    id = request.args.get("id", default = 1, type = int)
-    filt = db.mensaje.find({"id": id})
-    for i in filt:
-        msj = i["mensaje"]
-        data = i["metadata"]
-    respuesta = f"Mensaje: {msj}, Data: {data}"
-    return f"<h1>{respuesta}</h1>"
+@app.route("/messages/<int:Id>", methods=["GET"])
+def id_(Id):
+    mensaje = ''
+    if not isinstance(Id, str):
+        Id = float(Id)
+    resultado = db.mensaje.find({"id": Id})
+    for x in resultado:
+        mensaje = x
+    return f"<h1>{mensaje}</h1>"
 
 #COMPLETO
-@app.route("/messages/project-search", methods=["GET"])
-def project_search():
+@app.route("/messages/<project_search>", methods=["GET"])
+def project_search(project_search):
     # SE RESCATA EL PARAMETRO
-    nom = request.args.get("proyecto", default = "", type = str)
-    mensajes = []
-    resp = ""
-    n = 1
-    filt = db.mensaje.find()
-    for i in filt:
-        print(nom)
-        if i["metadata"]["sender"] == nom:
-            mensajes.append(i["mensaje"])
-        if i["metadata"]["receiver"] == nom:
-            mensajes.append(i["mensaje"])
-    for i in mensajes:
-        resp += f"Mensajes => {n}: {i} "
-        n += 1
 
-    return f"<h1>{resp}</h1>"
+    sender = db.mensaje.find({'metadata.sender':'Proyecto_Agua'})
+    receiver = db.mensaje.find({'metadata.receiver':'Proyecto_Agua'})
+    resultados = []
+    for x in sender:
+        resultados.append(x)
+    for x in receiver:
+        resultados.append(x)
+
+    return f"<h3>{resultados}</h3>"
 
 
 #INCOMPLETO
@@ -89,4 +81,3 @@ def content_search():
 
 if __name__ == "__main__":
     app.run()
-
